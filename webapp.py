@@ -1,21 +1,20 @@
 import streamlit as st
-import cv2
 import numpy as np
 import tensorflow as tf
+from PIL import Image
 
 # Load the trained model
 model = tf.keras.models.load_model('my_model.keras')
 
 # Function to preprocess the image
-def preprocess_image(image_path):
-    image = cv2.imread(image_path)
-    image = cv2.resize(image, (224, 224))
-    image = image / 255.0  # Rescale pixel values to [0, 1]
+def preprocess_image(image):
+    image = image.resize((224, 224))
+    image = np.array(image) / 255.0  # Rescale pixel values to [0, 1]
     return image
 
 # Function to make predictions
-def predict_class(image_path):
-    image = preprocess_image(image_path)
+def predict_class(image):
+    image = preprocess_image(image)
     # Convert the image to a batch of size 1 (since we are predicting a single image)
     image_batch = np.expand_dims(image, axis=0)
     # Make predictions on the image
@@ -32,20 +31,18 @@ def main():
     
     if image_file is not None:
         try:
-            # Save the uploaded image to a temporary file
-            temp_image_path = 'temp_image.jpg'
-            with open(temp_image_path, 'wb') as f:
-                f.write(image_file.getvalue())
+            # Open the uploaded image
+            image = Image.open(image_file)
             
             # Make prediction
-            predicted_class_index = predict_class(temp_image_path)
+            predicted_class_index = predict_class(image)
 
             # Assuming you have a list of class names
             class_names = ['Bicycle', 'Bike', 'Car', 'Cart', 'Truck']
             predicted_class_name = class_names[predicted_class_index]
 
             # Display prediction
-            st.image(image_file, caption='Uploaded Image', use_column_width=True)
+            st.image(image, caption='Uploaded Image', use_column_width=True)
             st.write(f'Prediction: {predicted_class_name}')
         except Exception as e:
             st.error(f'Error: {e}')
