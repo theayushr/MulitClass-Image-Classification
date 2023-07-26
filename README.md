@@ -1,5 +1,3 @@
-# MulitClass-Image-Classification
-
 # Machine Learning Multi-Class Image Classification Project
 
 This repository contains a multi-class image classification project using Convolutional Neural Networks (CNNs) to classify images of different objects, including bicycles, bikes, cars, carts, and trucks. The project involves data preprocessing, model building using transfer learning with MobileNet, model training, and deployment using Flask as a web application.
